@@ -32,3 +32,6 @@ Route::resource('users', 'UsersController', ['only'=>['show', 'update', 'edit']]
 
 //帖子路由
 Route::resource('topics', 'TopicsController');
+
+//分类下的路由
+Route::resource('categories', 'CategoriesController', ['only'=>['show']]);

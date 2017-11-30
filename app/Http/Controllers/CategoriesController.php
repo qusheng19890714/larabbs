@@ -13,9 +13,9 @@ class CategoriesController extends Controller
      * 分类下的帖子列表页
      * @param Category $category
      */
-    public function show(Category $category)
+    public function show(Request $request, Category $category, Topic $topic)
     {
-        $topics = Topic::with('category', 'user')->where('category_id', $category->id)->paginate(20);
+        $topics = $topic->withOrder($request->order)->where('category_id', $category->id)->paginate(20);
 
         return view('topics.index', compact('topics', 'category'));
     }

@@ -12,9 +12,10 @@ class TopicsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request , Topic $topic)
     {
-        $topics = Topic::with('category', 'user')->paginate(30);
+
+        $topics = $topic->withOrder($request->order)->paginate(20); //withOrder是本地作用域, 调用了topic.php中的scopeWithOrder
 
         return view('topics.index', compact('topics'));
     }

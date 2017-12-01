@@ -7,6 +7,8 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\Topic;
 use Auth;
+use App\Handlers\ImageUploadHandler;
+use Illuminate\Http\Response;
 
 class TopicsController extends Controller
 {
@@ -52,7 +54,7 @@ class TopicsController extends Controller
         $topic->user_id = Auth::user()->id;
         $topic->save();
 
-        return redirect()->route('topics.show', $topic->id)->with('message', '创建成功');
+        return redirect()->route('topics.show', $topic->id)->with('success', '成功创建话题');
     }
 
     /**
@@ -63,7 +65,7 @@ class TopicsController extends Controller
      */
     public function show(Topic $topic)
     {
-        var_dump($topic);
+        return view('topics.show', compact('topic'));
     }
 
     /**
@@ -98,5 +100,34 @@ class TopicsController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * 上传图片
+     */
+    public function uploadImage(Request $request, ImageUploadHandler $uploader)
+    {
+        $data = [
+
+            'success'   => false,
+            'msg'       => '上传失败',
+            'file_path' => ''
+        ];
+
+        //上传文件
+        if ($file = $request->upload_file) {
+
+            //保存图片到本地
+            $result = $uploader->save($request->upload_file, 'topics', \Auth::id());
+
+            if ($result) {
+
+                $data['success']   = true;
+                $data['msg']       = '上传成功';
+                $data['file_path'] = $result['path'];
+            }
+        }
+
+        return $data;
     }
 }

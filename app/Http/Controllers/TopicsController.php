@@ -2,11 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TopicRequest;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\Topic;
+use Auth;
 
 class TopicsController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth', ['except'=>['index','show']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -25,9 +34,10 @@ class TopicsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Topic $topic)
     {
-        //
+        $categories = Category::all();
+        return view('topics.create_and_edit', compact('categories', 'topic'));
     }
 
     /**
@@ -36,9 +46,13 @@ class TopicsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TopicRequest $request, Topic $topic)
     {
-        //
+        $topic->fill($request->all());
+        $topic->user_id = Auth::user()->id;
+        $topic->save();
+
+        return redirect()->route('topics.show', $topic->id)->with('message', '创建成功');
     }
 
     /**
@@ -47,9 +61,9 @@ class TopicsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Topic $topic)
     {
-        //
+        var_dump($topic);
     }
 
     /**

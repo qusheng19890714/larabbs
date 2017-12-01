@@ -13,7 +13,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        \Carbon\Carbon::setLocale('zh');
+        \Carbon\Carbon::setLocale('zh'); //中文
+        \App\Models\Topic::observe(\App\Observers\TopicObserver::class); // 摘要
+
+
     }
 
     /**

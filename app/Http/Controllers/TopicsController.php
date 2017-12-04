@@ -74,9 +74,13 @@ class TopicsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Topic $topic)
     {
-        //
+        $this->authorize('update', $topic);
+
+        $categories = Category::all();
+
+        return view('topics.create_and_edit', compact('categories', 'topic'));
     }
 
     /**
@@ -86,9 +90,14 @@ class TopicsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(TopicRequest $request, Topic $topic)
     {
-        //
+        $this->authorize('update', $topic);
+
+        $topic->update($request->all());
+
+        return redirect()->route('topics.show', $topic->id)->with('success', '更新成功！');
+
     }
 
     /**
@@ -97,9 +106,13 @@ class TopicsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Topic $topic)
     {
-        //
+        $this->authorize('destroy', $topic);
+
+        $topic->delete();
+
+        return redirect()->route('topics.index')->with('success', '删除成功');
     }
 
     /**

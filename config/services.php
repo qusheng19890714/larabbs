@@ -35,4 +35,11 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    //百度翻译
+    'baidu_translate' => [
+
+        'appid' => env('BAIDU_TRANSLATE_APPID', '20171204000102090'),
+        'key'   => env('BAIDU_TRANSLATE_KEY', 'moqXVckIwHl0HPj_AJqr'),
+    ]
+
 ];

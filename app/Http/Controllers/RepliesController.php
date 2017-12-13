@@ -28,7 +28,7 @@ class RepliesController extends Controller
         $reply->topic_id = $request->input('topic_id');
         $reply->save();
 
-        return redirect()->to($reply->link())->with('success', '回复成功');
+        return redirect()->to($reply->topic->link())->with('success', '回复成功');
     }
 
 

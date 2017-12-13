@@ -2,6 +2,7 @@
 namespace App\Observers;
 
 use App\Models\Reply;
+use App\Notifications\TopicReplied;
 
 class ReplyObserver
 {
@@ -13,7 +14,13 @@ class ReplyObserver
 
     public function created(Reply $reply)
     {
-        $reply->topic->increment('reply_count', 1); //回复数量加1
+        $topic = $reply->topic;
+        $topic->increment('reply_count', 1);
+
+        // 如果评论的作者不是话题的作者，才需要通知
+        if ( ! $reply->user->isAuthorOf($topic)) {
+            $topic->user->notify(new TopicReplied($reply));
+        }
     }
 
 }

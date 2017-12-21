@@ -9,6 +9,7 @@ use App\Models\Topic;
 use Auth;
 use App\Handlers\ImageUploadHandler;
 use Illuminate\Http\Response;
+use App\Models\User;
 
 class TopicsController extends Controller
 {
@@ -23,12 +24,14 @@ class TopicsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request , Topic $topic)
+    public function index(Request $request , Topic $topic, User $user)
     {
-
         $topics = $topic->withOrder($request->order)->paginate(20); //withOrder是本地作用域, 调用了topic.php中的scopeWithOrder
 
-        return view('topics.index', compact('topics'));
+        //获取活跃用户
+        $active_users = $user->getActiveUsers();
+
+        return view('topics.index', compact('topics', 'active_users'));
     }
 
     /**

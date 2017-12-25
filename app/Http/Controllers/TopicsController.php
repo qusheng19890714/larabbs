@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TopicRequest;
 use App\Models\Category;
+use App\Models\Link;
 use Illuminate\Http\Request;
 use App\Models\Topic;
 use Auth;
@@ -24,14 +25,17 @@ class TopicsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request , Topic $topic, User $user)
+    public function index(Request $request , Topic $topic, User $user, Link $link)
     {
         $topics = $topic->withOrder($request->order)->paginate(20); //withOrder是本地作用域, 调用了topic.php中的scopeWithOrder
 
         //获取活跃用户
         $active_users = $user->getActiveUsers();
 
-        return view('topics.index', compact('topics', 'active_users'));
+        //获取链接
+        $links = $link->getAllCached();
+
+        return view('topics.index', compact('topics', 'active_users', 'links'));
     }
 
     /**

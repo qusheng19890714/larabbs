@@ -1,6 +1,7 @@
 <?php
 namespace App\Observers;
 
+use App\Events\TopicCreate;
 use App\Models\Topic;
 use App\Handlers\SlugTranslateHandler;
 
@@ -25,6 +26,7 @@ class TopicObserver
             // 推送任务到队列
             dispatch(new TranslateSlug($topic));
         }
+
     }
 
     public function deleted(Topic $topic)

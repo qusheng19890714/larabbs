@@ -53,6 +53,7 @@ class UsersController extends Controller
         //头像
         if ($request->avatar) {
 
+
             $result = $uploader->save($request->avatar, 'avatars', $user->id, '361');
 
             if ($request) {

@@ -37,6 +37,22 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
+    <script src="https://js.pusher.com/4.0/pusher.min.js"></script>
+    <script>
+
+        // Enable pusher logging - don't include this in production
+        Pusher.logToConsole = true;
+
+        var pusher = new Pusher('b09f17649acf2087ef4d', {
+            cluster: 'ap1',
+            encrypted: true
+        });
+
+        var channel = pusher.subscribe('test');
+        channel.bind('my-event', function(data) {
+            alert(data.info);
+        });
+    </script>
     @yield('scripts')
     </body>
 </html>

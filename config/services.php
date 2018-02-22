@@ -40,6 +40,13 @@ return [
 
         'appid' => env('BAIDU_TRANSLATE_APPID', '20171204000102090'),
         'key'   => env('BAIDU_TRANSLATE_KEY', 'moqXVckIwHl0HPj_AJqr'),
-    ]
+    ],
+
+    //微信登录
+    'weixin' => [
+        'client_id' => env('WEIXIN_KEY'),
+        'client_secret' => env('WEIXIN_SECRET'),
+        'redirect' => env('WEIXIN_REDIRECT_URI'),
+    ],
 
 ];

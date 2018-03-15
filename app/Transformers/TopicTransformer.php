@@ -6,6 +6,8 @@ use League\Fractal\TransformerAbstract;
 
 class TopicTransformer extends TransformerAbstract
 {
+    protected $availableIncludes = ['user', 'category'];
+
     public function transform(Topic $topic)
     {
         return [
@@ -23,5 +25,25 @@ class TopicTransformer extends TransformerAbstract
             'created_at' => $topic->created_at->toDateTimeString(),
             'updated_at' => $topic->updated_at->toDateTimeString(),
         ];
+    }
+
+    /**
+     * 话题的用户数据
+     * @param Topic $topic
+     * @return \League\Fractal\Resource\Item
+     */
+    public function includeUser(Topic $topic)
+    {
+        return $this->item($topic->user, new UserTransformer());
+    }
+
+    /**
+     * 话题的分类数据
+     * @param Topic $topic
+     * @return \League\Fractal\Resource\Item
+     */
+    public function includeCategory(Topic $topic)
+    {
+        return $this->item($topic->category, new CategoryTransformer());
     }
 }

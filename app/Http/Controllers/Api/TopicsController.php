@@ -3,12 +3,56 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Topic;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Transformers\TopicTransformer;
 use App\Http\Requests\Api\TopicRequest;
 
 class TopicsController extends Controller
 {
+    /**
+     * 话题列表
+     * @param Request $request
+     * @param Topic   $topic
+     * @return \Dingo\Api\Http\Response
+     */
+    public function index(Request $request, Topic $topic)
+    {
+        $query = $topic->query();
+
+        if ($categoryId = $request->category_id) {
+
+            $query->where('category_id', $categoryId);
+        }
+
+        switch ($request->order)
+        {
+            case 'recent' :
+                $query->recent();
+                break;
+            default :
+                $query->recentReplied();
+                break;
+        }
+
+        $topics = $query->paginate(20);
+
+        return $this->response->paginator($topics, new TopicTransformer());
+    }
+
+    public function userIndex(User $user, Request $request)
+    {
+        $topics = $user->topics()->recent()->paginate(20);
+
+        return $this->response->paginator($topics, new TopicTransformer());
+    }
+
+    /**
+     * 发表话题
+     * @param TopicRequest $request
+     * @param Topic        $topic
+     * @return $this
+     */
     public function store(TopicRequest $request, Topic $topic)
     {
         $topic->fill($request->all());
@@ -19,6 +63,11 @@ class TopicsController extends Controller
             ->setStatusCode(201);
     }
 
+    /** 修改话题
+     * @param TopicRequest $request
+     * @param Topic        $topic
+     * @return \Dingo\Api\Http\Response
+     */
     public function update(TopicRequest $request, Topic $topic)
     {
         $this->authorize('update', $topic);
@@ -27,6 +76,12 @@ class TopicsController extends Controller
         return $this->response->item($topic, new TopicTransformer());
     }
 
+    /**
+     * 删除话题
+     * @param Topic $topic
+     * @return \Dingo\Api\Http\Response
+     * @throws \Exception
+     */
     public function destory(Topic $topic)
     {
         $this->authorize('update', $topic);

@@ -3,9 +3,8 @@
 namespace App\Http\Requests\Api;
 
 
-class AuthorizationRequest extends FormRequest
+class ReplyRequest extends FormRequest
 {
-
 
     /**
      * Get the validation rules that apply to the request.
@@ -15,9 +14,7 @@ class AuthorizationRequest extends FormRequest
     public function rules()
     {
         return [
-
-            'username' => 'required|string',
-            'password' => 'required|string|min:6',
+            'content' => 'required|min:2',
         ];
     }
 }

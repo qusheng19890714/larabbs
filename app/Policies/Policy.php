@@ -2,11 +2,10 @@
 
 namespace App\Policies;
 
-use App\Models\Topic;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class TopicPolicy extends Policy
+class Policy
 {
     use HandlesAuthorization;
 
@@ -20,13 +19,11 @@ class TopicPolicy extends Policy
         //
     }
 
-    public function update(User $user, Topic $topic)
+    public function before($user, $ability)
     {
-        return $user->isAuthorOf($topic);
-    }
+        if ($user->can('manage_contents')) {
 
-    public function destroy(User $user, Topic $topic)
-    {
-        return $user->isAuthorOf($topic);
+            return true;
+        }
     }
 }
